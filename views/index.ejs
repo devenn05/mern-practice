@@ -19,7 +19,7 @@
     <ul>
         <% books.forEach((book, index) => {  %>
             <li> 
-                <a href="/books/<%= index %>"> <%=book%></a>
+                <a href="/books/<%= index %>"> <%=book.title%></a>
             </li>
         <% }) %> 
     </ul>
@@ -31,6 +31,10 @@
             <input type="text" name="title" placeholder="Book name">
             <input type="text" name="story" placeholder="Enter Story">
             <button type="submit"> Add Book</button>
+        </form>
+
+        <form action="/delete-all" method="post">
+            <button type="submit">Delete all</button>
         </form>
     </div>
 </body>
