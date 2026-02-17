@@ -1,4 +1,5 @@
-const fs = require('fs')
+const fs = require('fs');
+const { title } = require('process');
 
 const getBooks = ()=>{
     const jsonData = fs.readFileSync('./books.json', 'utf-8');
@@ -50,5 +51,27 @@ exports.deleteBook = (req, res)=>{
 exports.deleteAllBook = (req, res)=>{
     saveBook([]);
     res.redirect('/books')
+}
+
+exports.updateBook = (req, res)=>{
+    const books = getBooks();
+    const bookId = req.params.index;
+    if (books[bookId]){
+        books[bookId] = {
+        title: req.body.title,
+        story: req.body.story
+        }
+    }
+    saveBook(books);
+    res.redirect('/books')
+}
+
+exports.editBookPage = (req, res)=>{
+    const books = getBooks();
+    const bookId =req.params.index;
+    const selectedBook = books[bookId];
+
+    if (!selectedBook) return res.redirect('/books');
+    res.render('edit', {book: selectedBook, id: bookId})
 }
 

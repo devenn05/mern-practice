@@ -4,7 +4,7 @@ const fs = require('fs')
 const app = express();
 const port = process.env.PORT;
 const bookRoutes = require('./routes/bookRoutes');
-const mainRoutes = require('./routes/mainRoutes')
+const mainRoutes = require('./routes/mainRoutes');
 
 app.set('view engine', 'ejs');
 

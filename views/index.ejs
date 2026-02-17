@@ -20,6 +20,7 @@
         <% books.forEach((book, index) => {  %>
             <li> 
                 <a href="/books/<%= index %>"> <%=book.title%></a>
+                <a href="/books/edit-book/<%= index %>"> edit</a>
             </li>
         <% }) %> 
     </ul>
@@ -37,5 +38,6 @@
             <button type="submit">Delete all</button>
         </form>
     </div>
+
 </body>
 </html>

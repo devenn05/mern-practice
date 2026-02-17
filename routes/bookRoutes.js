@@ -15,4 +15,8 @@ router.delete('/delete-book/:index', bookController.deleteBook);
 
 router.get('/:index', bookController.getBookById);
 
+router.post('/update-book/:index', bookController.updateBook);
+
+router.get('/edit-book/:index', bookController.editBookPage);
+
 module.exports = router;
