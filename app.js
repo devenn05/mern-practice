@@ -1,7 +1,8 @@
+require('dotenv').config();
 const express = require('express');
 const fs = require('fs')
 const app = express();
-const port = 3000;
+const port = process.env.PORT;
 const bookRoutes = require('./routes/bookRoutes');
 const mainRoutes = require('./routes/mainRoutes')
 
@@ -13,5 +14,5 @@ app.use('/books', bookRoutes)
 app.use('/', mainRoutes)
 
 app.listen(port, ()=>{
-    console.log("Server is running on http://localhost:3000")
+    console.log(`Server is running on http://localhost:3000 on ${port}`)
 })
