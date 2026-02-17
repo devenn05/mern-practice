@@ -9,6 +9,10 @@ app.use(express.urlencoded({extended: true}))
 let myBooks = ["Marvels", "Harry Potter", "DC Universe"]
 let myStories = ["a", "b", "c"]
 
+app.get("/about", (req, res)=>{
+    res.render('about')
+})
+
 app.get('/', (req, res)=>{
     res.render('index', {
         books: myBooks
