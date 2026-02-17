@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { title } = require('process');
+const catchAsync = require('../utils/catchAsync');
 
 const getBooks = ()=>{
     const jsonData = fs.readFileSync('./books.json', 'utf-8');
@@ -10,12 +10,12 @@ const saveBook = (data) =>{
     fs.writeFileSync('./books.json', JSON.stringify(data, null, 2));
 }
 
-exports.getBooks = (req, res)=>{
+exports.getBooks = catchAsync((req, res)=>{
     const books = getBooks();
-    res.render('index', {books: books})
-}
+    res.render('index', {books: books});
+});
 
-exports.getBookById = (req, res)=>{
+exports.getBookById = catchAsync((req, res)=>{
     const books = getBooks();
     const bookId = req.params.index;
     selectedBook = books[bookId];
@@ -27,17 +27,17 @@ exports.getBookById = (req, res)=>{
         title: selectedBook.title,
         story: selectedBook.story,
         id: bookId
-    })
-}
+    });
+});
 
-exports.addBook = (req, res)=>{
+exports.addBook = catchAsync((req, res)=>{
     const books = getBooks();
     books.push({title: req.body.title, story: req.body.story});
     saveBook(books);
-    res.redirect('/books')
-}
+    res.redirect('/books');
+});
 
-exports.deleteBook = (req, res)=>{
+exports.deleteBook = catchAsync((req, res)=>{
     const books = getBooks();
     const bookId = req.params.index;
 
@@ -46,32 +46,32 @@ exports.deleteBook = (req, res)=>{
         saveBook(books);
         res.redirect('/books')
     }
-}
+});
 
-exports.deleteAllBook = (req, res)=>{
+exports.deleteAllBook = catchAsync((req, res)=>{
     saveBook([]);
-    res.redirect('/books')
-}
+    res.redirect('/books');
+});
 
-exports.updateBook = (req, res)=>{
+exports.updateBook = catchAsync((req, res)=>{
     const books = getBooks();
     const bookId = req.params.index;
     if (books[bookId]){
         books[bookId] = {
         title: req.body.title,
         story: req.body.story
-        }
-    }
+        };
+    };
     saveBook(books);
-    res.redirect('/books')
-}
+    res.redirect('/books');
+});
 
-exports.editBookPage = (req, res)=>{
+exports.editBookPage = catchAsync((req, res)=>{
     const books = getBooks();
     const bookId =req.params.index;
     const selectedBook = books[bookId];
 
     if (!selectedBook) return res.redirect('/books');
-    res.render('edit', {book: selectedBook, id: bookId})
-}
+    res.render('edit', {book: selectedBook, id: bookId});
+});
 
