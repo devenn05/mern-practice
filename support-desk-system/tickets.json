@@ -23,5 +23,12 @@
     "description": "Fix the Kafka and Redis configuration with Confluent and Upstash.",
     "priority": "high",
     "status": "open"
+  },
+  {
+    "id": "1771414993708",
+    "title": "Development ",
+    "description": "Full Dev",
+    "priority": "high",
+    "status": "resolved"
   }
 ]

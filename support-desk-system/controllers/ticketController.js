@@ -12,8 +12,19 @@ const saveTickets = (data) =>{
 }
 
 exports.getDashboard = catchAsync((req, res, next)=>{
-    const tickets = getTickets();
-    res.render('dashboard', {tickets: tickets});
+    let tickets = getTickets();
+    const {priority, status} = req.query;
+
+    if (priority) {
+        tickets = tickets.filter(t => t.priority === priority);
+    }
+    if (status) {
+        tickets = tickets.filter(t => t.status === status);
+    }
+    res.render('dashboard', {
+        tickets,
+        currentPriority: priority
+    });
 })
 
 exports.createTicket = catchAsync((req, res,next)=>{
