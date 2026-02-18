@@ -1,6 +1,7 @@
 require('dotenv').config();
 const port = process.env.PORT;
 const mainRoutes = require('./routes/mainRoutes')
+const ticketRoutes = require('./routes/ticketRoutes')
 const express = require('express');
 const app = express();
 
@@ -13,7 +14,8 @@ app.use((req, res, next)=>{
     next();
 }) 
 
-app.use('/', mainRoutes)
+app.use('/', mainRoutes);
+app.use('/tickets', ticketRoutes);
 
 app.use((err,req,res,next)=>{
     console.error(err.stack);

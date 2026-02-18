@@ -1,2 +1,4 @@
+node_modules/
 script.py
 web_project_context.txt
+.env

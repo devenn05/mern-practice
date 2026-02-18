@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket System</title>
+    <style>
+        body{
+            background-color: antiquewhite;
+            width: 100%;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+
+    <div>
+        <form action="/tickets/add-ticket" method="post">
+
+            <input type="text" name="title" placeholder="Problem Title" required>
+            <input type="text" name="description" placeholder="Describe the issue..." required>
+            
+            <label>Priority</label>
+            <select name="priority" >
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+            </select>
+
+            <button type="submit"> Submit</button>
+        </form>
+    </div>
+
+    <div>
+        <h2>All tickets</h2>
+        <table style="width: 50%;">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <% if (tickets.length === 0) { %>
+                    <tr><td>No tickets found</td></tr>
+                <% } else { %>
+                    <% tickets.forEach(ticket => { %>
+                        <tr>
+                            <td><%=ticket.id %></td>
+                            <td><%=ticket.title %></td>
+                            <td><%=ticket.description %></td>
+                            <td><%=ticket.priority %></td>
+                            <td><%=ticket.status %></td>
+                        </tr>
+                    <% }) %>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
