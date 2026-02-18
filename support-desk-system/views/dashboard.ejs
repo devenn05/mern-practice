@@ -54,7 +54,22 @@
                             <td><%=ticket.title %></td>
                             <td><%=ticket.description %></td>
                             <td><%=ticket.priority %></td>
-                            <td><%=ticket.status %></td>
+                            <td>
+                                <br>
+                                <% if (ticket.status === 'open') {%>
+                                <form action="/tickets/update-ticket/<%= ticket.id %>" method="post">
+                                    <input type="hidden" name="newStatus" value="in-progress">
+                                    <button type="submit">Start</button>
+                                </form>
+                                <% } else if (ticket.status==='in-progress') { %>
+                                    <form action="/tickets/update-ticket/<%=ticket.id %>" method="post">
+                                        <input type="hidden" name="newStatus" value="resolved">
+                                        <button type="submit">Resolve</button>
+                                    </form>
+                                <% } else { %>
+                                    <span>fixed</span>
+                                <% } %>
+                            </td>
                         </tr>
                     <% }) %>
                 <% } %>

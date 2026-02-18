@@ -3,7 +3,7 @@
     "id": "1771411100951",
     "description": "Fix the Kafka and Redis configuration with Confluent and Upstash.",
     "priority": "medium",
-    "status": "open"
+    "status": "resolved"
   },
   {
     "id": "1771411328354",

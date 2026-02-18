@@ -1,0 +1,12 @@
+[
+  {
+    "timestamp": "2026-02-18T11:31:55.272Z",
+    "action": "STATUS UPDATED: open -> in-progress",
+    "ticketId": "1771411100951"
+  },
+  {
+    "timestamp": "2026-02-18T11:31:58.002Z",
+    "action": "STATUS UPDATED: in-progress -> resolved",
+    "ticketId": "1771411100951"
+  }
+]

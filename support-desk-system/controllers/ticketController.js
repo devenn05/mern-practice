@@ -1,5 +1,6 @@
 const fs = require('fs');
 const catchAsync = require('../utils/catchAsync');
+const logAction = require('../utils/logger');
 
 const getTickets = ()=>{
     const jsonData = fs.readFileSync('./tickets.json', 'utf-8');
@@ -29,5 +30,22 @@ exports.createTicket = catchAsync((req, res,next)=>{
         status: 'open'
     })
     saveTickets(tickets);
+    res.redirect('/tickets');
+});
+
+exports.updateTicket = catchAsync((req, res, next)=>{
+    const tickets = getTickets();
+    const {id} = req.params;
+    const {newStatus} = req.body;
+
+    const currentTicketIndex = tickets.findIndex(t => t.id === id);
+    if (currentTicketIndex === -1) throw new Error("Ticket Not Found");
+
+    const oldStatus = tickets[currentTicketIndex].status;
+
+    tickets[currentTicketIndex].status = newStatus;
+    saveTickets(tickets);
+
+    logAction(`STATUS UPDATED: ${oldStatus} -> ${newStatus}`, id);
     res.redirect('/tickets');
 })
