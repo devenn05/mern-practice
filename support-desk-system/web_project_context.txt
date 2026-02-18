@@ -1,0 +1,94 @@
+================================================
+DIRECTORY STRUCTURE
+================================================
+./
+    script.py
+    server.js
+    web_project_context.txt
+    config/
+    controllers/
+    routes/
+        mainRoutes.js
+    utils/
+        catchAsync.js
+    views/
+        error.ejs
+
+
+================================================
+SOURCE CODE (JS & EJS)
+================================================
+
+--- START OF FILE: .\server.js ---
+require('dotenv').config();
+const port = process.env.PORT;
+const mainRoutes = require('./routes/mainRoutes')
+const express = require('express');
+const app = express();
+
+
+app.set('view engine', 'ejs');
+app.use(express.urlencoded({extended: true}));
+
+app.use((req, res, next)=>{
+    console.log(`${req.method} request to ${req.url}`);
+    next();
+}) 
+
+app.use('/', mainRoutes)
+
+app.use((err,req,res,next)=>{
+    console.error(err.stack);
+    res.status(500).render("error", {message: "error error error"});
+})
+
+app.listen(port, ()=>{
+    console.log(`Server is running on port ${port}`);
+})
+--- END OF FILE: .\server.js ---
+
+--- START OF FILE: .\routes\mainRoutes.js ---
+const express = require('express');
+const { log } = require('node:console');
+const router = express.Router()
+const catchAsync = require('../utils/catchAsync')
+
+router.get('/status', catchAsync((req, res)=>{
+    console.log("Status 200: Working");
+    res.redirect('/');
+}))
+
+module.exports = router;
+--- END OF FILE: .\routes\mainRoutes.js ---
+
+--- START OF FILE: .\utils\catchAsync.js ---
+const catchAsync = (func)=>{
+    return (req, res,next) =>{
+        Promise.resolve(func(req,res,next)).catch(next);
+    }
+}
+
+module.exports = catchAsync;
+--- END OF FILE: .\utils\catchAsync.js ---
+
+--- START OF FILE: .\views\error.ejs ---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error</title>
+    <style>
+        body{
+            width: 100%;
+            height: 100vh;
+            background-color: antiquewhite;
+        }
+    </style>
+</head>
+<body>
+    <h1>Error</h1>
+</body>
+</html>
+--- END OF FILE: .\views\error.ejs ---
+
