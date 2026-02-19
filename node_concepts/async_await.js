@@ -1,5 +1,4 @@
-const { use } = require("react");
-
+// Example 1
 function loginUser(username, password){
     return new Promise((resolve, reject)=>{
         if (username === "admin" && password ==="admin"){
@@ -40,3 +39,27 @@ async function runApplication(){
 }
 
 runApplication();
+
+// Example 2
+
+function downloadFile(fileName){
+    return new Promise((resolve, reject)=>{
+        setTimeout(()=>{
+            if (fileName){
+                resolve({file: fileName});
+            } else reject("Error");
+        }, 1000);
+    });
+}
+
+async function mainDownloader(){
+    const fileOne = await downloadFile("file 1");
+    console.log("File: " + fileOne.file);
+
+    const fileTwo = await downloadFile("file 2");
+    console.log("File: "+ fileTwo.file);
+
+    console.log("Finished....")
+}
+
+mainDownloader();
