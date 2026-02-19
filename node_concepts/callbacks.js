@@ -43,31 +43,26 @@ loadUser(dummyFunc);
 // Callbacks - Real time example
 // ---------------------------------------------------------------------------------
 
-// Import standard Node.js modules
-const dns = require('dns'); // For networking/internet
-const fs = require('fs');   // For hard drive access
+
+const dns = require('dns'); 
+const fs = require('fs');   
 
 console.log(" 1. Application Started");
 
 // TASK A: Look up the IP address of google.com
-// We pass a callback function to handle the result
 dns.lookup('google.com', (err, ipAddress) => {
 
-    // A1. Standard pattern: Check for errors first
-    // If you have no internet, this 'err' will have data
     if (err) {
         console.error("Network Error! Could not find website.");
-        return; // Stop here. Don't try to write the file.
+        return;
     }
 
-    // A2. If we are here, we have the data!
     console.log(`2. Network Success! Google's IP is: ${ipAddress} ---`);
     console.log("(Passing data to next task...)");
 
     const contentToWrite = `Target: google.com\nIP Address: ${ipAddress}\nTimestamp: ${new Date()}`;
 
     // TASK B: Write that specific data to a file
-    // Notice: This function is INSIDE the callback of Task A
     fs.writeFile('target.txt', contentToWrite, (fileErr) => {
         
         // B1. Check for file errors (e.g., hard drive full)
@@ -76,7 +71,6 @@ dns.lookup('google.com', (err, ipAddress) => {
             return;
         }
 
-        // B2. Success!
         console.log("3. Disk Success! Data saved to 'target.txt'");
     });
 
