@@ -1,13 +1,14 @@
 const fs = require('fs').promises;
 const catchAsync = require('../utils/catchAsync');
 const logAction = require('../utils/logger');
+const _ = require('lodash');
 
 const getTickets = async()=>{
     try{
         const jsonData = await fs.readFile('./tickets.json', 'utf-8');
         return JSON.parse(jsonData);
     }catch(error){
-        if (error === 'ENOENT') return [];
+        if (error.code === 'ENOENT') return [];
         throw error;
     }
 }
@@ -26,6 +27,10 @@ exports.getDashboard = catchAsync(async(req, res, next)=>{
     if (status) {
         tickets = tickets.filter(t => t.status === status);
     }
+
+    const priorityOrder = {'high':1, 'medium':2, 'low':3};
+    tickets = _.sortBy(tickets, (t)=> priorityOrder[t.priority]);
+
     res.render('dashboard', {
         tickets,
         currentPriority: priority
