@@ -1,8 +1,11 @@
 const { timeStamp, log } = require('console');
-const fs = require('fs');
+const fs = require('fs').promises;
 
-const logAction = (action,  ticketId) => {
-    const logs = JSON.parse(fs.readFileSync('./auditLogs.json', 'utf-8'));
+const logAction = async (action,  ticketId) => {
+     let logs = [];
+    const data = await fs.readFile('./auditLogs.json', 'utf-8');
+    logs = JSON.parse(data);
+
 
     const newEntry = {
         timestamp: new Date().toISOString(),
@@ -11,7 +14,7 @@ const logAction = (action,  ticketId) => {
     };
 
     logs.push(newEntry);
-    fs.writeFileSync('./auditLogs.json', JSON.stringify(logs, null, 2));
+    await fs.writeFile('./auditLogs.json', JSON.stringify(logs, null, 2));
 };
 
 module.exports = logAction;

@@ -9,7 +9,7 @@
     "id": "1771411328354",
     "description": "Fix the Kafka and Redis configuration with Confluent and Upstash",
     "priority": "high",
-    "status": "open"
+    "status": "in-progress"
   },
   {
     "id": "1771411414952",
@@ -29,6 +29,13 @@
     "title": "Development ",
     "description": "Full Dev",
     "priority": "high",
+    "status": "resolved"
+  },
+  {
+    "id": "1771496332923",
+    "title": "Async Await issues",
+    "description": "Implementing Async await",
+    "priority": "medium",
     "status": "resolved"
   }
 ]
