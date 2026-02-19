@@ -47,7 +47,7 @@ loadUser(dummyFunc);
 const dns = require('dns'); // For networking/internet
 const fs = require('fs');   // For hard drive access
 
-console.log("--- 1. Application Started ---");
+console.log(" 1. Application Started");
 
 // TASK A: Look up the IP address of google.com
 // We pass a callback function to handle the result
@@ -56,13 +56,13 @@ dns.lookup('google.com', (err, ipAddress) => {
     // A1. Standard pattern: Check for errors first
     // If you have no internet, this 'err' will have data
     if (err) {
-        console.error("❌ Network Error! Could not find website.");
+        console.error("Network Error! Could not find website.");
         return; // Stop here. Don't try to write the file.
     }
 
     // A2. If we are here, we have the data!
-    console.log(`--- 2. Network Success! Google's IP is: ${ipAddress} ---`);
-    console.log("       (Passing data to next task...)");
+    console.log(`2. Network Success! Google's IP is: ${ipAddress} ---`);
+    console.log("(Passing data to next task...)");
 
     const contentToWrite = `Target: google.com\nIP Address: ${ipAddress}\nTimestamp: ${new Date()}`;
 
@@ -72,14 +72,14 @@ dns.lookup('google.com', (err, ipAddress) => {
         
         // B1. Check for file errors (e.g., hard drive full)
         if (fileErr) {
-            console.error("❌ File System Error! Could not write file.");
+            console.error("File System Error! Could not write file.");
             return;
         }
 
         // B2. Success!
-        console.log("--- 3. Disk Success! Data saved to 'target.txt' ---");
+        console.log("3. Disk Success! Data saved to 'target.txt'");
     });
 
 });
 
-console.log("--- 4. (This prints immediately because Node is async) ---");
+console.log("4. (This prints immediately because Node is async)");
