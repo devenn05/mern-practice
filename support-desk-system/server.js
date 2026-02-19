@@ -19,7 +19,7 @@ app.use('/tickets', ticketRoutes);
 
 app.use((err,req,res,next)=>{
     console.error(err.stack);
-    res.status(500).render("error", {message: "error error error"});
+    res.status(500).render("error", {message: "Error"});
 })
 
 app.listen(port, ()=>{
