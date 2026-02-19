@@ -14,7 +14,6 @@ flipCoin.then((message)=>{
 })
 
 // Simulating a real world example
-
 function checkDatabase(username){
     return new Promise((resolve, reject)=>{
         if (username === "admin"){
