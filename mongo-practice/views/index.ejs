@@ -40,15 +40,24 @@
             <% todos.forEach(todo => {%>
                 <tr>
                     <th><span><%= todo._id %></span></th>
-                    <th><span><%= todo.description %></span></th>
+                    <th>
+                        <% if (todo.status === 'pending') { %>
+                             <span style="background-color: lightcoral;"><%= todo.description %></span>
+                        <% } else { %>
+                             <span style="background-color: lightgreen;"><%= todo.description %></span>
+                        <% }%>
+                       
+                    </th>
                     <th><span><%= todo.priority %></span></th>
                     <th>
                         <% if (todo.status === 'pending') { %>
-                            <form action="/update-status/<%= todo._id%>" method="post">
-                                <button type="submit">Complete</button>   
+                            <form action="/update-status/<%= todo._id %>" method="post">
+                                <button type="submit">Mark Complete</button>   
                             </form>
                         <% } else { %>
-                            <span>: Completed</span>
+                            <form action="/update-status/<%= todo._id %>" method="post">
+                                <button type="submit">Mark Pending</button>   
+                            </form>
                         <% } %>
                     </th>
 

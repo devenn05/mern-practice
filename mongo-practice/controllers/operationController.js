@@ -23,6 +23,8 @@ exports.deleteTasks = catchAsync(async(req, res)=>{
 
 exports.updateTaskStatus = catchAsync(async(req, res)=>{
     const { taskId} = req.params;
-    await Todo.findByIdAndUpdate(taskId, {status: 'Completed'});
+    const task = await Todo.findById(taskId);
+    const newStatus = task.status === 'pending' ? 'completed' : 'pending';
+    await Todo.findByIdAndUpdate(taskId, {status: newStatus});
     res.redirect('/');
 })
