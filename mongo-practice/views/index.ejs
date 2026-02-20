@@ -14,35 +14,53 @@
 </head>
 <body>
     <h2>Add TODOs</h2>
-    <form action="/add-task" method="post">
-        <input type="text" name="description">
+        <form action="/add-task" method="post">
+        <input type="text" name="description" placeholder="Enter your task">
+        <select name="priority">
+            <option value="low">Low Priority</option>
+            <option value="medium"> Medium Priority</option>
+            <option value="high">High Priority</option>
+        </select>
         <button type="submit">Submit</button>
     </form>
 
     <h2>Current List</h2>
-    <ul>
-        <% todos.forEach(todo => {%>
-            
-            <li>
+    <table style="width: 50%;">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Description</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
 
-                <span><%= todo.description %></span>
+        <tbody>
+            <% todos.forEach(todo => {%>
+                <tr>
+                    <th><span><%= todo._id %></span></th>
+                    <th><span><%= todo.description %></span></th>
+                    <th><span><%= todo.priority %></span></th>
+                    <th>
+                        <% if (todo.status === 'pending') { %>
+                            <form action="/update-status/<%= todo._id%>" method="post">
+                                <button type="submit">Complete</button>   
+                            </form>
+                        <% } else { %>
+                            <span>: Completed</span>
+                        <% } %>
+                    </th>
 
-                <% if (todo.status === 'pending') { %>
-                    <form action="/update-status/<%= todo._id%>" method="post">
-                        <button type="submit">Complete</button>   
-                </form>
-                <% } else { %>
-                    <span>: Completed</span>
-                <% } %>
-
-                <form action="/delete-task/<%= todo._id %>" method="post">
-                    <button type="submit">DELETE</button>
-                </form>
-
-
-            </li>
-
+                    <th>
+                        <form action="/delete-task/<%= todo._id %>" method="post">
+                            <button type="submit">DELETE</button>
+                        </form>
+                    </th>
+                </tr>
         <% }) %>
-    </ul>
+        </tbody>
+    </table>
+
 </body>
 </html>

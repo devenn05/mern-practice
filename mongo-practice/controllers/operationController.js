@@ -8,7 +8,8 @@ exports.getTasks = catchAsync(async(req, res)=>{
 
 exports.addTasks = catchAsync(async(req, res)=>{
     const newTodo = new Todo({
-        description: req.body.description
+        description: req.body.description,
+        priority: req.body.priority
     });
     await newTodo.save();
     res.redirect('/');
