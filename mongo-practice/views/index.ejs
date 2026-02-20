@@ -33,6 +33,7 @@
                 <th>Priority</th>
                 <th>Status</th>
                 <th>Delete</th>
+                <th>Edit</th>
             </tr>
         </thead>
 
@@ -65,6 +66,11 @@
                         <form action="/delete-task/<%= todo._id %>" method="post">
                             <button type="submit">DELETE</button>
                         </form>
+                    </th>
+                    <th>
+                        <form action="/update-whole-task/<%= todo._id%>" method="get">
+                        <button type="submit">Edit</button>
+                    </form>
                     </th>
                 </tr>
         <% }) %>
