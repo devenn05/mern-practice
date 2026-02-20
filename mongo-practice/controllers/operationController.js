@@ -1,43 +1,27 @@
 const Todo = require('../models/todo');
+const catchAsync = require('../utils/catchAsync');
 
-exports.getTasks = async(req, res)=>{
-    try{
-        const todos = await Todo.find({});
-        res.render('index', {todos: todos});
-    } catch (error) {
-        res.status(500).send("Error fetching todos");
-    }
-}
+exports.getTasks = catchAsync(async(req, res)=>{
+    const todos = await Todo.find({});
+    res.render('index', {todos: todos});
+})
 
-exports.addTasks = async(req, res)=>{
+exports.addTasks = catchAsync(async(req, res)=>{
     const newTodo = new Todo({
         description: req.body.description
     });
-    try{
-        await newTodo.save();
-        res.redirect('/');
-    } catch (error) {
-        res.status(500).send("Error adding Todos.");
-    }
-}
+    await newTodo.save();
+    res.redirect('/');
+})
 
-exports.deleteTasks = async(req, res)=>{
+exports.deleteTasks = catchAsync(async(req, res)=>{
     const { taskId } = req.params;
-    try {
-        await Todo.findByIdAndDelete(taskId);
-        res.redirect('/')
-    } catch(error){
-        res.status(500).send("Error deleting Todos.");
-    }
-}
+    await Todo.findByIdAndDelete(taskId);
+    res.redirect('/')
+})
 
-exports.updateTaskStatus = async(req, res)=>{
+exports.updateTaskStatus = catchAsync(async(req, res)=>{
     const { taskId} = req.params;
-    try{
-        await Todo.findByIdAndUpdate(taskId, {status: 'Completed'});
-        res.redirect('/');
-    } catch (error){
-        res.status(500).send("Error updating Task Status");
-    }
-}
-
+    await Todo.findByIdAndUpdate(taskId, {status: 'Completed'});
+    res.redirect('/');
+})
