@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TO DO SYSTEM</title>
+    <style>
+        body{
+            width: 100%;
+            height: 100vh;
+            background-color: aliceblue;
+        }
+    </style>
+</head>
+<body>
+    <h2>Add TODOs</h2>
+    <form action="/add-task" method="post">
+        <input type="text" name="description">
+        <button type="submit">Submit</button>
+    </form>
+
+    <h2>Current List</h2>
+    <ul>
+        <% todos.forEach(todo => {%>
+            
+            <li>
+
+                <span><%= todo.description %></span>
+                <form action="/delete-task/<%= todo._id %>" method="post">
+                    <button type="submit">DELETE</button>
+                </form>
+
+            </li>
+
+        <% }) %>
+    </ul>
+</body>
+</html>
