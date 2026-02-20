@@ -2,8 +2,26 @@ const Todo = require('../models/todo');
 const catchAsync = require('../utils/catchAsync');
 
 exports.getTasks = catchAsync(async(req, res, next)=>{
-    const todos = await Todo.find({});
-    res.render('index', {todos: todos});
+    const filter = {};
+    if (req.query.priority){
+        filter.priority = req.query.priority;
+    }
+    if (req.query.status){
+        filter.status = req.query.status;
+    }
+    let sortQuery = {}
+    if (req.query.sort === 'oldest'){
+        sortQuery = {createdAt: 1};
+    } else {
+        sortQuery = {createdAt: -1};
+    }
+    const todos = await Todo.find(filter).sort(sortQuery);
+    res.render('index', {
+        todos: todos,
+        currentPriority: req.query.priority,
+        currentStatus: req.query.status,
+        currentSort: req.query.sort
+    });
 })
 
 exports.addTasks = catchAsync(async(req, res, next)=>{
