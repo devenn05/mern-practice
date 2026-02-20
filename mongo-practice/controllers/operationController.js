@@ -31,3 +31,13 @@ exports.deleteTasks = async(req, res)=>{
     }
 }
 
+exports.updateTaskStatus = async(req, res)=>{
+    const { taskId} = req.params;
+    try{
+        await Todo.findByIdAndUpdate(taskId, {status: 'Completed'});
+        res.redirect('/');
+    } catch (error){
+        res.status(500).send("Error updating Task Status");
+    }
+}
+

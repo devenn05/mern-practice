@@ -26,9 +26,19 @@
             <li>
 
                 <span><%= todo.description %></span>
+
+                <% if (todo.status === 'pending') { %>
+                    <form action="/update-status/<%= todo._id%>" method="post">
+                        <button type="submit">Complete</button>   
+                </form>
+                <% } else { %>
+                    <span>: Completed</span>
+                <% } %>
+
                 <form action="/delete-task/<%= todo._id %>" method="post">
                     <button type="submit">DELETE</button>
                 </form>
+
 
             </li>
 
