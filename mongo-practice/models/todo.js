@@ -4,7 +4,8 @@ const todoSchema = new mongoose.Schema({
     description: {type:String, required:true},
     status: {type:String, default: 'pending'},
     priority: {type:String, default: 'medium', enum:['low', 'medium', 'high']},
-    createdAt: {type: Date, default: Date.now}
+    createdAt: {type: Date, default: Date.now},
+    dueDate: {type: Date, required: true, default: () => new Date(Date.now() + 7*24*60*60*1000)}
 });
 
 module.exports = mongoose.model('Todo', todoSchema);

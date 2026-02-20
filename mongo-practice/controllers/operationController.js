@@ -27,7 +27,8 @@ exports.getTasks = catchAsync(async(req, res, next)=>{
 exports.addTasks = catchAsync(async(req, res, next)=>{
     const newTodo = new Todo({
         description: req.body.description,
-        priority: req.body.priority
+        priority: req.body.priority,
+        dueDate: req.body.dueDate
     });
     await newTodo.save();
     res.redirect('/');
@@ -59,6 +60,7 @@ exports.updateWholeTask = catchAsync(async(req, res, next)=>{
     task.description = req.body.description;
     task.priority = req.body.priority;
     task.status = req.body.status;
+    task.dueDate = req.body.dueDate;
     await task.save();
     res.redirect('/');
 })
