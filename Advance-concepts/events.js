@@ -101,7 +101,7 @@ class Building extends EventEmitter{
     }
     detectSmoke(){
         console.log("Detected Smoke!!!!!!!")
-        this.emit('fire', sprinklerSystem);
+        this.emit('fire');
     }
 }
 const sprinklerSystem = ()=>{
