@@ -4,8 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Password Manager</title>
+    <style>
+        body{
+            width: 100%;
+            height: 100vh;
+            background-color: antiquewhite;
+        }
+    </style>
 </head>
 <body>
-    
+    <h1>Add Password</h1>
+    <form action="/add" method="post">
+        <input type="text" name="appName" placeholder="Enter App name" required>
+        <input type="text" name="username" placeholder="Enter your Username" required>
+        <input type="password"  name="password" placeholder="Enter your password" required>
+        <button type="submit">Save</button>
+    </form>
+
+    <h1>Dashboard</h1>
+    <table style="width: 70%;">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>App Name</th>
+                <th>Username</th>
+                <th>Password</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% credentials.forEach(cred => {  %>
+                <tr>
+                    <th><%= cred._id%></th>
+                    <th><%= cred.appName%></th>
+                    <th><%= cred.username%></th>
+                    <th><%= cred.encryptedPassword%></th>
+                    <th>
+                        <form action="/view/<%=cred._id%>" method="get">
+                            <button type="submit"> Reveal</button>
+                        </form>
+                    </th>
+                </tr>
+            <% })%>
+        </tbody>
+
+    </table>
 </body>
 </html>
