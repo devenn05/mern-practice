@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const catchAsync = require('../utils/catchAsync');
+const catchAsync = require('./catchAsync');
 require('dotenv').config();
 
 const alogrithm = 'aes-256-cbc';
