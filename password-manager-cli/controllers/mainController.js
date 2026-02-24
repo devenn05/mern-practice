@@ -1,6 +1,7 @@
 const Credential = require('../model/Credential');
 const catchAsync = require('../utils/catchAsync');
 const {encrypt, decrypt} = require('../utils/cryptoHelper');
+const auditLogger = require('../utils/auditLogger');
 
 exports.getDashboard = catchAsync(async(req, res, next)=>{
     const credentials = await Credential.find().sort({createdAt: -1});
@@ -26,6 +27,10 @@ exports.viewCredentials = catchAsync(async(req, res, next)=>{
         throw new Error("Credentials not found!!!")
     }
     const plainPassword = decrypt(cred.encryptedPassword)
+
+     // TRIGGER THE AuditLogger EVENT
+    auditLogger.emit('log', 'VIEW_PASSWORD', cred.username, cred.appName);
+    
     res.render('view-pass', {
         appName: cred.appName,
         username: cred.username,
