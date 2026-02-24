@@ -17,6 +17,9 @@ exports.addCredentials = catchAsync(async(req,res,next)=>{
         encryptedPassword: scrambledPassword
     });
     await newCred.save();
+
+    // TRIGGER THE AuditLogger EVENT
+    auditLogger.emit('log', 'ADDED_NEW_CREDENTIALS', username, appName);
     res.redirect('/');
 })
 
@@ -30,7 +33,7 @@ exports.viewCredentials = catchAsync(async(req, res, next)=>{
 
      // TRIGGER THE AuditLogger EVENT
     auditLogger.emit('log', 'VIEW_PASSWORD', cred.username, cred.appName);
-    
+
     res.render('view-pass', {
         appName: cred.appName,
         username: cred.username,
