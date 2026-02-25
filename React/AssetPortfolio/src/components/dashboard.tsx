@@ -29,3 +29,4 @@ const Dashboard: React.FC<CoinProp> = ({ coins }) => {
 }
 
 export default Dashboard
+

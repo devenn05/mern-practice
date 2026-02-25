@@ -4,3 +4,4 @@ export interface Coin {
     symbol: string,
     quantity: number
 }
+

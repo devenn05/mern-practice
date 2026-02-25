@@ -31,3 +31,4 @@ const Addcoin: React.FC<AddCoinProps> = ({onAdd}) => {
 }
 
 export default Addcoin
+
