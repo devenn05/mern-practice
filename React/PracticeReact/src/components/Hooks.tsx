@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 
 export const FirstHook = () => {
     const [count, setCount] = useState<number>(0);
@@ -187,4 +187,106 @@ export const SixthHook = () =>{
     )
 }
 
+// Trying to implement useMemo
+export const SeventhHook = () =>{
+    const [value, setValue] = useState<number>(20)
+    const [toShow, setToShow] = useState(false)
 
+    const changeText = (e: React.ChangeEvent<HTMLInputElement>) =>{
+        setValue(Number(e.target.value))
+    }
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+    };
+
+    const waitFunc = (num: number) =>{
+        for (let i=0; i <=50000000; i++);
+        return num * 2;
+    }
+    const returnValue = useMemo(()=>{
+        return waitFunc(value)
+    }, [value])
+    //const returnValue = waitFunc(value)
+
+    return(
+        <div>
+            <input type="text" value={value} onChange={changeText} />
+            <button onClick={()=> setToShow(!toShow)}>Change</button>
+            {toShow && <h1>{returnValue}</h1>}
+
+            <form action="submit" onSubmit={handleSubmit}>
+                <input type="text"/>
+                <input type="text" />
+                <button type='submit'>Send</button>
+            </form>
+            
+        </div>
+    )
+}
+
+export const EightHook = () => {
+    const[name, setName] = useState<string>('')
+    const count = useRef(0);
+
+    useEffect(()=>{
+        count.current = count.current + 1
+    })
+    return (
+        <div>
+            <br />
+            <input type="text" value={name} onChange={e => setName(e.target.value)} />
+            <strong>My name is {name}- {count.current}</strong>
+        </div>
+    )
+}
+
+export const NinthHook = () =>{
+    const [mylist, setMyList] = useState<string[]>([])
+    const [name, setName] = useState<string>('')
+    const [show, setShow] = useState(false)
+    const focusRef = useRef<HTMLInputElement>(null)
+
+    const handleSubmit = (e: React.FormEvent) =>{
+        e.preventDefault();
+        setMyList([...mylist, name])
+        setName('')
+    }
+    const handleClick = ()=>{
+        setShow(!show);
+        setTimeout(() => {
+            focusRef.current?.focus()
+        }, 0)
+    }
+
+    return(
+        <>
+        <button onClick={handleClick}>Show</button>
+        {show && <div>
+            <form onSubmit={handleSubmit}>
+                <input ref={focusRef}  type="text" value={name} onChange={e=> setName(e.target.value)} />
+                <button type='submit'> Submit</button>
+            </form>
+            </div>}
+
+        {(mylist.length>0) &&
+            <table>
+                <thead>
+                    <tr>
+                        <th>index</th>
+                        <th>Names</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {mylist.map((name, index)=>(
+                        <tr key={index}>
+                            <td>{index}</td>
+                            <td>{name}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        }
+        </>
+    )
+}
