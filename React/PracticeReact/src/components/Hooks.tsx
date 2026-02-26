@@ -290,3 +290,69 @@ export const NinthHook = () =>{
         </>
     )
 }
+
+export const TenthHook = () =>{
+  const timerRef = useRef<number | null>(null);
+  const [count, setCount] = useState(0);
+  
+  const startTimer = () => {
+    if (timerRef.current !== null) return;
+    timerRef.current = setInterval(() => {
+        setCount(prev => prev + 1);
+    }, 1000);
+  };
+
+  const stopTimer = () => {
+    if (timerRef.current !== null) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+  }; 
+
+  return (
+    <div>
+      <button onClick={startTimer}>Start</button>
+      <p>Timer: {count}</p>
+      <button onClick={stopTimer}>Stop</button>
+    </div>
+  );
+}
+interface Employee {
+  name: string;
+  age: number;
+  gender: string;
+  salary: number;
+}
+
+type Props = {
+    users: Employee[];
+}
+
+export const EleventhHook = ({users}: Props) =>{
+    return(
+        <>
+        <table style={{width: '50%'}}>
+            <thead>
+                <tr>
+                    <td>Index</td>
+                    <td>Name</td>
+                    <td>Age</td>
+                    <td>Gender</td>
+                    <td>Salary</td>
+                </tr>
+            </thead>
+            <tbody>
+                {users.map((user, index)=>(
+                    <tr key={index}>
+                        <td>{index}</td>
+                        <td>{user.name}</td>
+                        <td>{user.age}</td>
+                        <td>{user.gender}</td>
+                        <td>{user.salary}</td>
+                    </tr>
+                ))}
+            </tbody>
+        </table>
+        </>
+    )
+}
