@@ -103,5 +103,88 @@ export const ThirdHook = () => {
     )
 }
 
+export const FourthHook =() =>{
+    const [res, setRes] = useState('')
+    useEffect(()=>{
+        if (res !== "") {
+            window.location.href = `https://www.${res}.com`;
+        } 
+    }, [res])
+    return(
+        <div>
+            <button onClick={()=> setRes('google')}>Google</button>
+            <button onClick={()=> setRes('youtube')}>Youtube</button>
+            <button onClick={()=> setRes('gmail')}>Gmail</button>
+        </div>
+    )
+}
+
+export const FifthHook = () =>{
+    const [count, setCount] = useState<number>(0)
+    const [posts, setPosts] = useState<any[]>([])
+    const [showTable, setShowTable] = useState(false);
+    const add = () =>{
+        setCount(count => count + 1)
+    }
+    const subtract = () =>{
+        setCount(count => count - 1)
+    }
+    useEffect(()=>{
+        document.title = `PracticeRect-${count}`
+    }, [add, subtract])
+
+    useEffect(()=>{
+        fetch(`https://jsonplaceholder.typicode.com/posts`)
+        .then(res=> res.json())
+        .then(data=> setPosts(data))
+    }, [])
+
+    return(
+        <div>
+        <button onClick={add}>Add</button>
+        <button onClick={subtract}>Subtract</button>
+        <button onClick={()=>setShowTable(!showTable)}>Show/Hide Post Table</button>
+
+        {showTable && 
+        <table>
+            <thead>
+                <tr>
+                    <td>userId</td>
+                    <td>id</td>
+                    <td>title</td>
+                    <td>body</td>
+                </tr>
+            </thead>
+            <tbody>
+                {posts.map((post, index)=>(
+                    <tr key={index}>
+                        <td>{post.userId}</td>
+                        <td>{post.id}</td>
+                        <td>{post.title}</td>
+                        <td>{post.body}</td>
+                    </tr>
+                ))}
+            </tbody>
+        </table>}
+        </div>
+
+    )
+}
+
+export const SixthHook = () =>{
+    const [text, setText] = useState<string>('')
+
+    const changeText = (e: React.ChangeEvent<HTMLInputElement>) =>{
+        setText(e.target.value)
+    }
+
+    return(
+        <div>
+            <br />
+            <span>Enter Text: <input type="text" value={text} onChange={changeText}/></span>
+            <h1>{text}</h1>
+        </div>
+    )
+}
 
 
