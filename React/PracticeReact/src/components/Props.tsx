@@ -35,6 +35,7 @@ export const Users = ()  => {
     }
     return(
         <>
+        <br />
         <form onSubmit={handleSubmit}>
             <input type="text" value={user.name} onChange={e=> setUser({...user, name: e.target.value})} />
             <input type="number" value={user.age} onChange={e=> setUser({...user, age: Number(e.target.value)})} />
