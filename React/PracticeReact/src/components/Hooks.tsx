@@ -356,3 +356,37 @@ export const EleventhHook = ({users}: Props) =>{
         </>
     )
 }
+
+export const MainHook =() =>{
+    const [isLoggedin, setLogin] = useState(false);
+    
+    if (isLoggedin) {
+        return (
+        <>
+            <TempOne onToggle={()=> setLogin(!isLoggedin)}/>
+        </>
+    )
+    } else {
+        return (
+        <>
+            <TempTwo onToggle={()=> setLogin(!isLoggedin)}/>
+        </>
+    )
+    }
+}
+
+interface buttonProps{
+    onToggle:() => void;
+}
+
+export const TempOne = ({onToggle}: buttonProps) =>{
+    return(
+        <button onClick={onToggle}>Login</button>
+    )
+}
+
+export const TempTwo = ({onToggle}: buttonProps) =>{
+    return(
+        <button onClick={onToggle}>Logout</button>
+    )
+}

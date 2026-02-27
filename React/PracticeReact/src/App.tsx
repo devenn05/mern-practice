@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './App.css'
-import {FirstHook, SecondHook, ThirdHook, FourthHook, FifthHook, SixthHook, SeventhHook, EightHook,NinthHook, TenthHook} from './components/Hooks';
+import {FirstHook, SecondHook, ThirdHook, FourthHook, FifthHook, SixthHook, SeventhHook, EightHook,NinthHook, TenthHook, MainHook} from './components/Hooks';
 import {Props, Users} from './components/Props';
 import ComponentMain from './components/Context';
 function App() {
@@ -22,6 +22,7 @@ function App() {
       <EightHook></EightHook>
       <NinthHook></NinthHook>
       <TenthHook></TenthHook>
+      <MainHook></MainHook>
     </div>
   )
 }
