@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import type { Coin } from '../model'
+import CoinPrice from './CoinPrice';
 
 interface CoinProp{
         coins: Coin[],
@@ -17,7 +18,7 @@ const Dashboard: React.FC<CoinProp> = ({ coins }) => {
         <ul>
             {coins.map((coin)=>(
                 <li key={coin.id}>
-                    <Link to={`/coin/${coin.id}`}> {coin.symbol} - {coin.quantity} Units </Link>
+                    <Link to={`/coin/${coin.id}`}> {coin.symbol} - {coin.quantity} Units Price:  <CoinPrice symbol={coin.symbol}/></Link>
             </li>
             ))}
             

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import type { Coin } from '../model';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,17 +12,31 @@ const Addcoin: React.FC<AddCoinProps> = ({onAdd}) => {
     const [quantity, setQuantity] = useState(0);
     const navigate = useNavigate();
 
-    const handleSubmit = (e: React.FormEvent) =>{
+    const symbolRef = useRef<HTMLInputElement>(null);
+
+    const handleSubmit = async (e: React.FormEvent) =>{
         e.preventDefault();
+        const formatSymbol = symbol.toUpperCase().trim();
+
+        try { 
+          const response = await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${formatSymbol}`);
+          if (!response.ok){
+            symbolRef.current?.focus()
+            return;
+          }
         onAdd({id: Date.now().toString(), name, symbol, quantity});
         navigate('/');
+        } catch (error) {
+          alert("Error, could not verify symbol.")
+        }
+        
     }
   return (
     <div>
       <h2>Add New Pair</h2>
       <form onSubmit={handleSubmit}>
         <input type="text" onChange={(e)=> setName(e.target.value)} placeholder='Pair Name' />
-        <input type="text" onChange={(e)=> addSymbol(e.target.value)} placeholder='Pair Symbol' />
+        <input type="text" ref={symbolRef} onChange={(e)=> addSymbol(e.target.value)} placeholder='Pair Symbol' />
         <input type="number" onChange={(e)=> setQuantity(Number(e.target.value))} placeholder='Quantity' />
         <button type='submit'>Add Pair</button>
       </form>
