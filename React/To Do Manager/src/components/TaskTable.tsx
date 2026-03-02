@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import type { Task } from '../App';
+import TaskCard from './TaskCard';
 
 interface tasksProps {
     tasks: Task[];
@@ -9,6 +10,34 @@ interface tasksProps {
 const TaskTable: React.FC<tasksProps> = ({tasks, setTasks}) => {
     const [editIndex, setEditIndex] = useState<number>(-1);
     const [editTask, setEditTask] = useState<Task | null>(null)
+
+    const [now, setNow] = useState(Date.now());
+
+    const [viewingTask, setViewingTask] = useState<Task | null>(null);
+
+    useEffect(()=>{
+        const timer = setInterval(()=>setNow(Date.now()), 1000);
+        return ()=> clearInterval(timer)
+    }, [])
+
+    const getRemainingTime = (dueDate?: string) => {
+    if (!dueDate) return "No Limit";
+
+    const target = new Date(dueDate).getTime();
+    const difference = target - now;
+
+    if (difference <=0 ){
+        return "Overdue"
+    }
+
+    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((difference / 1000 / 60) % 60);
+    const seconds = Math.floor((difference / 1000) % 60);
+
+    return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+}
+    
 
     const startEditing = (index: number, task: Task) =>{
         setEditIndex(index);
@@ -50,6 +79,7 @@ const TaskTable: React.FC<tasksProps> = ({tasks, setTasks}) => {
                     <td>Title</td>
                     <td>Status</td>
                     <td>Priority</td>
+                    <td>Due Date</td>
                     <td>Action</td>
                 </tr>
             </thead>
@@ -57,7 +87,7 @@ const TaskTable: React.FC<tasksProps> = ({tasks, setTasks}) => {
                 {tasks.map((task, index)=>{
                     const isEditing = editIndex === index
                     return (
-                        <tr>
+                        <tr key={index || task.id}>
                             <td>{index+1}</td>
                             <td>{isEditing ? (
                                 <input type="text" onChange={(e)=>setEditTask({...editTask!, title: e.target.value})} value={editTask?.title} placeholder={task.title} />
@@ -84,6 +114,17 @@ const TaskTable: React.FC<tasksProps> = ({tasks, setTasks}) => {
                                     <option value="high">High</option>
                                 </select>
                             ) : task.priority}</td>
+                            <td>
+                                {isEditing ? (
+                                <input 
+                                  type="datetime-local" 
+                                  value={editTask?.dueDate || ''} 
+                                  onChange={(e) => setEditTask({...editTask!, dueDate: e.target.value})} 
+                                />
+                                ) : (
+                                    getRemainingTime(task.dueDate)
+                                )}
+                            </td>
 
                             <td>
                                 {isEditing ? (
@@ -93,6 +134,7 @@ const TaskTable: React.FC<tasksProps> = ({tasks, setTasks}) => {
                                     </>
                                 ) : (
                                     <>
+                                        <button onClick={() => setViewingTask(task)}>View</button>
                                         <button onClick={() => startEditing(index, task)}>Update</button>
                                         <button onClick={() => handleDelete(index)}>Delete</button>
                                     </>
@@ -102,9 +144,14 @@ const TaskTable: React.FC<tasksProps> = ({tasks, setTasks}) => {
                     )
                 })}
             </tbody>
+            {viewingTask && (
+         <TaskCard task={viewingTask} onClose={() => setViewingTask(null)} />
+      )}
         </table>}
     </div>
   )
 }
 
 export default TaskTable
+
+

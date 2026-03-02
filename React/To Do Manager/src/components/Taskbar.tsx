@@ -12,6 +12,8 @@ const Taskbar: React.FC<tasksProps> = ({tasks, setTasks}) => {
     const [title,setTitle] = useState<string>('')
     const [status,setStatus] = useState<boolean>(false)
     const [priority,setPriority] = useState<Task['priority']>('medium')
+    const [hasDueDate, setHasDueDate] =useState<boolean>(false)
+    const [dueDate, setDueDate] = useState<string>('')
 
     useEffect(()=>{
         InputRef.current?.focus();
@@ -24,13 +26,17 @@ const Taskbar: React.FC<tasksProps> = ({tasks, setTasks}) => {
         return () => clearInterval(timer);
     }, [])
 
+
     const handleSubmit =(e: FormEvent)=>{
         e.preventDefault()
-        const newTask: Task = {title, status, priority}
+        const newTask: Task = {id: crypto.randomUUID(), title, status, priority, ...(hasDueDate && dueDate ? {dueDate: dueDate} : {})}
         setTasks([...tasks, newTask])
         setTitle('')
         setStatus(false)
         setPriority('medium')
+        setHasDueDate(false);
+        setDueDate('');
+        InputRef.current?.focus();
     }
 
   return (
@@ -44,6 +50,14 @@ const Taskbar: React.FC<tasksProps> = ({tasks, setTasks}) => {
                             <option value="medium">Medium</option>
                             <option value="high">High</option>
                         </select></span>
+        <label>
+          <input type="checkbox" checked={hasDueDate} onChange={(e) => setHasDueDate(e.target.checked)} />
+          Set Due Date:
+        </label>
+
+        {hasDueDate && (
+          <input type="datetime-local" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
+        )}
         <button type='submit'>Submit</button>
       </form>
     </div>
