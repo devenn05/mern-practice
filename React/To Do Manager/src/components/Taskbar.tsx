@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, type FormEvent } from 'react'
-import type { Task } from '../App'
+import { useTasks, type Task } from './TaskContext';
 import { useNavigate } from 'react-router-dom';
 
 interface tasksProps {
@@ -7,9 +7,9 @@ interface tasksProps {
     setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
 }
 
-const Taskbar: React.FC<tasksProps> = ({tasks, setTasks}) => {
+const Taskbar: React.FC = () => {
     const navigate = useNavigate();
-
+    const { tasks, setTasks } = useTasks();
     const [currentTime, setCurrentTime] = useState<number>(Date.now())
     const InputRef = useRef<HTMLInputElement>(null)
     const [title,setTitle] = useState<string>('')
@@ -40,7 +40,7 @@ const Taskbar: React.FC<tasksProps> = ({tasks, setTasks}) => {
         setHasDueDate(false);
         setDueDate('');
         InputRef.current?.focus();
-        navigate('/')
+        navigate('/tasks')
     }
 
   return (

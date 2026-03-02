@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import type { Task } from '../App';
+import {useTasks, type Task } from './TaskContext';
 import TaskCard from './TaskCard';
 
 interface tasksProps {
@@ -7,7 +7,8 @@ interface tasksProps {
     setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
 }
 
-const TaskTable: React.FC<tasksProps> = ({tasks, setTasks}) => {
+const TaskTable: React.FC = () => {
+    const { tasks, setTasks } = useTasks(); 
     const [editIndex, setEditIndex] = useState<number>(-1);
     const [editTask, setEditTask] = useState<Task | null>(null)
 
@@ -144,10 +145,10 @@ const TaskTable: React.FC<tasksProps> = ({tasks, setTasks}) => {
                     )
                 })}
             </tbody>
-            {viewingTask && (
+        </table>}
+        {viewingTask && (
          <TaskCard task={viewingTask} onClose={() => setViewingTask(null)} />
       )}
-        </table>}
     </div>
   )
 }
