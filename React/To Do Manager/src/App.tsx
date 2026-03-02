@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import './App.css'
 import Taskbar from './components/Taskbar'
 import TaskTable from './components/TaskTable'
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
 export interface Task{
   id: string,
@@ -27,8 +28,19 @@ function App() {
 
   return (
     <>
-      <Taskbar tasks={tasks} setTasks={setTasks} />
-      <TaskTable tasks= {tasks} setTasks={setTasks} ></TaskTable>
+      <Router>
+
+        <nav>
+          <Link to="/">Add tasks</Link>
+          <Link to="/tasks">View Tasks</Link>
+        </nav>
+
+      <Routes>
+        <Route path='/' element={<Taskbar tasks={tasks} setTasks={setTasks} />}></Route>
+        <Route path='/tasks' element={<TaskTable tasks= {tasks} setTasks={setTasks} ></TaskTable>}></Route>
+      </Routes>
+      
+      </Router>
     </>
   )
 }
