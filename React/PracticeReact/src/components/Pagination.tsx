@@ -49,7 +49,11 @@ const Pagination = () => {
     <div>
 
       <input type="text" value={searchQuery}onChange={handleSearch}/>
-      <button onClick={()=> setSortOrder(prev=> prev === 'asc' ? 'desc' : 'asc')}>Sort</button>
+      <button onClick={()=> {
+        const newPage = totalPages - currentPage + 1;
+        setCurrentPage(newPage);
+        setSortOrder(prev=> prev === 'asc' ? 'desc' : 'asc')
+        }}>Sort</button>
       <div>
         <select value={pageLimit} onChange={handleLimitChange}>
             <option value={5}>5</option>
