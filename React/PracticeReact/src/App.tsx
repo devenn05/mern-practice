@@ -3,10 +3,14 @@ import './App.css'
 import {FirstHook, SecondHook, ThirdHook, FourthHook, FifthHook, SixthHook, SeventhHook, EightHook,NinthHook, TenthHook, MainHook} from './components/Hooks';
 import {Props, Users} from './components/Props';
 import ComponentMain from './components/Context';
+import Pagination from './components/Pagination';
 function App() {
   return (
     <div>
-      <ComponentMain></ComponentMain>
+
+      <Pagination></Pagination>
+
+      {/* <ComponentMain></ComponentMain>
       <Users></Users>
 
       <Props name="Deven" age ={23} language = "Python"></Props>
@@ -22,7 +26,7 @@ function App() {
       <EightHook></EightHook>
       <NinthHook></NinthHook>
       <TenthHook></TenthHook>
-      <MainHook></MainHook>
+      <MainHook></MainHook> */}
     </div>
   )
 }
