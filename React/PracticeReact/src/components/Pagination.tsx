@@ -9,7 +9,8 @@ const Pagination = () => {
     const [posts, setPosts] = useState<Post[]>([])
     const [currentPage, setCurrentPage] = useState<number>(1)
     const [searchQuery, setSearchQuery] = useState('')
-    const pageLimit: number = 10;
+    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
+    const [pageLimit, setPageLimit] = useState(10);
 
     useEffect(()=>{
         const fetchPosts = async () =>{
@@ -22,10 +23,16 @@ const Pagination = () => {
       post.title.toLowerCase().includes(searchQuery.toLowerCase())
     )
 
+    const sortedPosts = [...filteredPosts].sort((a, b)=>{
+      if (sortOrder === 'asc'){
+        return a.id - b.id
+      } else return b.id - a.id
+    })
+
     const indexOfLastItem: number = currentPage * pageLimit;
     const indexOfFirstItem: number = indexOfLastItem - pageLimit;
 
-    const currentPosts = filteredPosts.slice(indexOfFirstItem, indexOfLastItem);
+    const currentPosts = sortedPosts.slice(indexOfFirstItem, indexOfLastItem);
 
     const totalPages = Math.ceil(posts.length / pageLimit)
 
@@ -33,11 +40,24 @@ const Pagination = () => {
       setSearchQuery(e.target.value)
       setCurrentPage(1)
     }
+    const handleLimitChange = (e: React.ChangeEvent<HTMLSelectElement>) =>{
+      setPageLimit(Number(e.target.value))
+      setCurrentPage(1)
+    }
 
   return (
     <div>
 
       <input type="text" value={searchQuery}onChange={handleSearch}/>
+      <button onClick={()=> setSortOrder(prev=> prev === 'asc' ? 'desc' : 'asc')}>Sort</button>
+      <div>
+        <select value={pageLimit} onChange={handleLimitChange}>
+            <option value={5}>5</option>
+            <option value={10}>10</option>
+            <option value={20}>20</option>
+            <option value={50}>50</option>
+          </select>
+      </div>
       <ul>
         {currentPosts.map(post => (
           <li key={post.id}>
