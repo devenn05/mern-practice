@@ -4,12 +4,12 @@ import {FirstHook, SecondHook, ThirdHook, FourthHook, FifthHook, SixthHook, Seve
 import {Props, Users} from './components/Props';
 import ComponentMain from './components/Context';
 import Pagination from './components/Pagination';
+import EComStore from './components/EComStore';
 function App() {
   return (
     <div>
 
-      <Pagination></Pagination>
-
+      <EComStore></EComStore>
       {/* <ComponentMain></ComponentMain>
       <Users></Users>
 
@@ -26,7 +26,9 @@ function App() {
       <EightHook></EightHook>
       <NinthHook></NinthHook>
       <TenthHook></TenthHook>
-      <MainHook></MainHook> */}
+      <MainHook></MainHook>
+      <Pagination></Pagination> */}
+
     </div>
   )
 }
