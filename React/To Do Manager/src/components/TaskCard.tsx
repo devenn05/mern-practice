@@ -23,3 +23,4 @@ const TaskCard: React.FC<TaskProps> = ({task, onClose}) => {
 }
 
 export default TaskCard
+

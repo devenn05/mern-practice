@@ -16,6 +16,20 @@ const TaskTable: React.FC = () => {
 
     const [viewingTask, setViewingTask] = useState<Task | null>(null);
 
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const tasksPerPage = 5;
+
+    const indexOfLastTask = currentPage * tasksPerPage
+    const indexOfFirstTask = indexOfLastTask - tasksPerPage
+    const currentTasks = tasks.slice(indexOfFirstTask, indexOfLastTask)
+    const totalPages = Math.ceil(tasks.length / tasksPerPage)
+
+    useEffect(() => {
+        if (currentPage > totalPages && totalPages > 0) {
+            setCurrentPage(totalPages);
+        }
+    }, [tasks.length, currentPage, totalPages]);
+
     useEffect(()=>{
         const timer = setInterval(()=>setNow(Date.now()), 1000);
         return ()=> clearInterval(timer)
@@ -66,14 +80,17 @@ const TaskTable: React.FC = () => {
         }
         return task;
     });
-    setTasks(updatedTasks);
-
-        
+    setTasks(updatedTasks);  
     }
+
+    const nextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+    const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
 
   return (
     <div>
-        {(tasks.length >= 1) && <table style={{width: '50%'}}>
+        {(tasks.length >= 1) && 
+        <>
+            <table style={{width: '50%'}}>
             <thead>
                 <tr>
                     <td>No.</td>
@@ -85,11 +102,12 @@ const TaskTable: React.FC = () => {
                 </tr>
             </thead>
             <tbody>
-                {tasks.map((task, index)=>{
+                {currentTasks.map((task, index)=>{
+                    const absoluteIndex = indexOfFirstTask + index;
                     const isEditing = editIndex === index
                     return (
-                        <tr key={index || task.id}>
-                            <td>{index+1}</td>
+                        <tr key={absoluteIndex || task.id}>
+                            <td>{absoluteIndex+1}</td>
                             <td>{isEditing ? (
                                 <input type="text" onChange={(e)=>setEditTask({...editTask!, title: e.target.value})} value={editTask?.title} placeholder={task.title} />
                             ) : (task.title)}</td>
@@ -101,7 +119,7 @@ const TaskTable: React.FC = () => {
                                     task.status ? (
                                       <span>Completed</span>
                                     ) : (
-                                      <button onClick={() => handleStatus(index)}>
+                                      <button onClick={() => handleStatus(absoluteIndex)}>
                                         Complete
                                       </button>
                                     )
@@ -136,8 +154,8 @@ const TaskTable: React.FC = () => {
                                 ) : (
                                     <>
                                         <button onClick={() => setViewingTask(task)}>View</button>
-                                        <button onClick={() => startEditing(index, task)}>Update</button>
-                                        <button onClick={() => handleDelete(index)}>Delete</button>
+                                        <button onClick={() => startEditing(absoluteIndex, task)}>Update</button>
+                                        <button onClick={() => handleDelete(absoluteIndex)}>Delete</button>
                                     </>
                                 )}
                             </td>
@@ -145,7 +163,14 @@ const TaskTable: React.FC = () => {
                     )
                 })}
             </tbody>
-        </table>}
+        </table>
+        <div>
+            <button onClick={prevPage} disabled={currentPage === 1}>Previous</button>
+                <span> Page {currentPage} of {totalPages} </span>
+                <button onClick={nextPage} disabled={currentPage === totalPages}>Next</button>
+            </div>
+        </>
+        }
         {viewingTask && (
          <TaskCard task={viewingTask} onClose={() => setViewingTask(null)} />
       )}

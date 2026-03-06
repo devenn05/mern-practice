@@ -5,6 +5,7 @@ import type { UserProfile } from '../types';
 import { addUser } from '../store/userSlice';
 import type { Product } from '../types';
 import {addToCart, removeFromCart} from '../store/cartSlice'
+import { decrement, increment } from '../store/counterSlice';
 
 
 const StoreItem = ({ product }: { product: Product }) => {
@@ -34,6 +35,9 @@ const StoreItem = ({ product }: { product: Product }) => {
 
 const EComStore = () => {
     const dispatch = useAppDispatch();
+
+    const count = useAppSelector((state)=> state.counter);
+
     const isDark = useAppSelector((state)=> state.ui.isDarkMode)
     const themeStyles = {
     backgroundColor: isDark ? 'black' : '#FFF',
@@ -62,6 +66,11 @@ const EComStore = () => {
 
   return (
     <>
+        <div>
+            <h1>{count.count}</h1>
+            <button onClick={()=> dispatch(increment())}>Add</button>
+            <button onClick={()=> dispatch(decrement())}>Subtract</button>
+        </div>
         <div style={themeStyles}>
             <span>Theme: <button onClick={()=> dispatch(toggleTheme())}>Mode</button> <br /></span>
             <br />
