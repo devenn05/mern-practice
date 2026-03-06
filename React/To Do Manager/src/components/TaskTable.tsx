@@ -7,6 +7,9 @@ interface tasksProps {
     setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
 }
 
+type SortField = 'id' | 'status' | 'priority' | 'dueDate' | null;
+type SortDirection = 'asc' | 'desc';
+
 const TaskTable: React.FC = () => {
     const { tasks, setTasks } = useTasks(); 
     const [editIndex, setEditIndex] = useState<number>(-1);
@@ -19,16 +22,10 @@ const TaskTable: React.FC = () => {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const tasksPerPage = 5;
 
-    const indexOfLastTask = currentPage * tasksPerPage
-    const indexOfFirstTask = indexOfLastTask - tasksPerPage
-    const currentTasks = tasks.slice(indexOfFirstTask, indexOfLastTask)
-    const totalPages = Math.ceil(tasks.length / tasksPerPage)
+    const [sortField, setSortField] = useState<SortField>(null);
+    const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
 
-    useEffect(() => {
-        if (currentPage > totalPages && totalPages > 0) {
-            setCurrentPage(totalPages);
-        }
-    }, [tasks.length, currentPage, totalPages]);
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(()=>{
         const timer = setInterval(()=>setNow(Date.now()), 1000);
@@ -54,12 +51,12 @@ const TaskTable: React.FC = () => {
 }
     
 
-    const startEditing = (index: number, task: Task) =>{
-        setEditIndex(index);
+     const startEditing = (originalIndex: number, task: Task) => {
+        setEditIndex(originalIndex);
         setEditTask({...task})
     }
 
-    const saveEdit = () =>{
+    const saveEdit = () => {
         if (editTask && editIndex !== -1){
             const updatedTask = [...tasks];
             updatedTask[editIndex] = editTask
@@ -68,46 +65,114 @@ const TaskTable: React.FC = () => {
         }
     }
 
-    const handleDelete = (indexToDelete: number)=>{
-        const updatedTasks = tasks.filter((_, index) => index !== indexToDelete);
+    const handleDelete = (originalIndex: number) => {
+        const updatedTasks = tasks.filter((_, index) => index !== originalIndex);
         setTasks(updatedTasks);
     }
 
-    const handleStatus = (indexToChangeStatus: number) =>{
+    const handleStatus = (originalIndex: number) => {
         const updatedTasks = tasks.map((task, index) => {
-        if (index === indexToChangeStatus) {
-            return { ...task, status: !task.status };
-        }
-        return task;
-    });
-    setTasks(updatedTasks);  
+            if (index === originalIndex) {
+                return { ...task, status: !task.status };
+            }
+            return task;
+        });
+        setTasks(updatedTasks);
     }
+
+    const handleSort = (field: SortField) => {
+        if (sortField === field) {
+            setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
+        } else {
+            setSortField(field);
+            setSortDirection('asc');
+        }
+    };
+
+    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchTerm(e.target.value);
+        setCurrentPage(1); 
+    };
+
+    const mappedTasks = tasks.map((task, index) => ({ task, originalIndex: index }));
+
+    const filteredTasks = mappedTasks.filter(({ task }) => 
+        task.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const sortedTasks = [...filteredTasks].sort((a, b) => {
+        if (!sortField) return 0;
+
+        let comparison = 0;
+
+        if (sortField === 'id') {
+            comparison = a.originalIndex - b.originalIndex;
+        } 
+        else if (sortField === 'status') {
+            comparison = (a.task.status === b.task.status) ? 0 : a.task.status ? 1 : -1;
+        } 
+        else if (sortField === 'priority') {
+            const weights = { low: 1, medium: 2, high: 3 };
+            comparison = weights[a.task.priority] - weights[b.task.priority];
+        } 
+        else if (sortField === 'dueDate') {
+            const timeA = a.task.dueDate ? new Date(a.task.dueDate).getTime() : Infinity;
+            const timeB = b.task.dueDate ? new Date(b.task.dueDate).getTime() : Infinity;
+            comparison = timeA - timeB;
+        }
+
+        return sortDirection === 'asc' ? comparison : -comparison;
+    });
+
+    const indexOfLastTask = currentPage * tasksPerPage
+    const indexOfFirstTask = indexOfLastTask - tasksPerPage
+    const currentTasks = sortedTasks.slice(indexOfFirstTask, indexOfLastTask);
+    const totalPages = Math.ceil(tasks.length / tasksPerPage) || 1;
+
+    useEffect(() => {
+        if (currentPage > totalPages && totalPages > 0) {
+            setCurrentPage(totalPages);
+        }
+    }, [tasks.length, currentPage, totalPages]);
 
     const nextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
     const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
 
+
+    const renderSortArrow = (field: SortField) => {
+        if (sortField !== field) return '';
+        return sortDirection === 'asc' ? ' ▲' : ' ▼';
+    };
   return (
     <div>
         {(tasks.length >= 1) && 
         <>
+            <div>
+                <input 
+                    type="text" 
+                    placeholder="Search tasks by title..." 
+                    value={searchTerm}
+                    onChange={handleSearch}
+                />
+            </div>
+
             <table style={{width: '50%'}}>
             <thead>
                 <tr>
-                    <td>No.</td>
-                    <td>Title</td>
-                    <td>Status</td>
-                    <td>Priority</td>
-                    <td>Due Date</td>
-                    <td>Action</td>
+                    <th style={{ cursor: 'pointer', userSelect: 'none' }} onClick={() => handleSort('id')}>No.{renderSortArrow('id')}</th>
+                        <th>Title</th>
+                        <th style={{ cursor: 'pointer', userSelect: 'none' }} onClick={() => handleSort('status')}>Status{renderSortArrow('status')}</th>
+                        <th style={{ cursor: 'pointer', userSelect: 'none' }} onClick={() => handleSort('priority')}>Priority{renderSortArrow('priority')}</th>
+                        <th style={{ cursor: 'pointer', userSelect: 'none' }} onClick={() => handleSort('dueDate')}>Due Date{renderSortArrow('dueDate')}</th>
+                        <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                {currentTasks.map((task, index)=>{
-                    const absoluteIndex = indexOfFirstTask + index;
-                    const isEditing = editIndex === index
+                {currentTasks.map(({ task, originalIndex }) => {
+                    const isEditing = editIndex === originalIndex;
                     return (
-                        <tr key={absoluteIndex || task.id}>
-                            <td>{absoluteIndex+1}</td>
+                        <tr key={originalIndex || task.id}>
+                            <td>{originalIndex+1}</td>
                             <td>{isEditing ? (
                                 <input type="text" onChange={(e)=>setEditTask({...editTask!, title: e.target.value})} value={editTask?.title} placeholder={task.title} />
                             ) : (task.title)}</td>
@@ -119,7 +184,7 @@ const TaskTable: React.FC = () => {
                                     task.status ? (
                                       <span>Completed</span>
                                     ) : (
-                                      <button onClick={() => handleStatus(absoluteIndex)}>
+                                      <button onClick={() => handleStatus(originalIndex)}>
                                         Complete
                                       </button>
                                     )
@@ -154,8 +219,8 @@ const TaskTable: React.FC = () => {
                                 ) : (
                                     <>
                                         <button onClick={() => setViewingTask(task)}>View</button>
-                                        <button onClick={() => startEditing(absoluteIndex, task)}>Update</button>
-                                        <button onClick={() => handleDelete(absoluteIndex)}>Delete</button>
+                                        <button onClick={() => startEditing(originalIndex, task)}>Update</button>
+                                        <button onClick={() => handleDelete(originalIndex)}>Delete</button>
                                     </>
                                 )}
                             </td>
